@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -184,8 +184,10 @@ int main(int argc, char **argv) {
     std::list<std::list<unsigned int> *> routes;
 
     // here the guess work starts
-    typedef std::set<unsigned int, unsigned int> UIntSet;
-    typedef std::map<unsigned int, unsigned int> UIntUIntMap;
+    /*
+     *typedef std::set<unsigned int, unsigned int> UIntSet;
+     *typedef std::map<unsigned int, unsigned int> UIntUIntMap;
+     */
 
     UIntUIntMap our_reverse;
     UIntUIntMap target_reverse;

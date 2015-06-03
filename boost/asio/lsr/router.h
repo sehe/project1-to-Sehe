@@ -25,7 +25,6 @@
 #endif
 
 namespace std {
-namespace tr1 {
 	template<typename F, typename S>
 	struct hash<pair<F, S> > {
 		typedef pair<F, S> argument_type;
@@ -38,7 +37,6 @@ namespace tr1 {
 		}
 	};
 	
-} // namespace tr1
 } // namespace std
 
 namespace boost {
@@ -54,12 +52,11 @@ namespace router {
 	const int OUR_ASN = -1;
 	
 	using namespace std;
-	using namespace std::tr1;
-	using namespace boost::signals2;
+	namespace s2 = boost::signals2;
 	
 	typedef list<unsigned int>* route;
 	
-	mutex guard;
+    mutex guard;
 	UIntSet targets;
 	unordered_map<unsigned int, list<route>*> ip2routes; // routes contain source and destination
 	
@@ -98,7 +95,7 @@ namespace router {
 		neww.clear();
 	}
 	
-	void findIntersections(UIntUIntMultimap& graph, unsigned int a, unsigned b, int intersections_to_search,
+	void findIntersections(UIntUIntMultimap& graph, unsigned int a, unsigned b, size_t intersections_to_search,
 	                       UIntSet& intersections, UIntUIntMap& a_reverse, UIntUIntMap& b_reverse)
 	{
 		UIntSet a_all;
@@ -267,7 +264,7 @@ namespace router {
 		
 		// remove repeated IPs and unknown hosts
 		unsigned int lastIp = 0;
-		for (int i = 0; i < route.size(); i++) {
+		for (size_t i = 0; i < route.size(); i++) {
 			unsigned int newIp = route[i];
 			if (newIp != 0 && newIp != lastIp) {
 				route[compressedRouteLength++] = newIp;
@@ -278,7 +275,7 @@ namespace router {
 		
 		// decline possibly cyclic routes
 		IntSet allIps;
-		for (int i = 0; i < route.size(); i++) {
+		for (size_t i = 0; i < route.size(); i++) {
 			unsigned int ip = route[i];
 			if (ip != 0) {
 				if (allIps.count(ip)) {
@@ -292,8 +289,8 @@ namespace router {
 	
 	void storeRoute(vector<unsigned int>& route) {
 		int lastIP = OUR_IP;
-		int lastASN = OUR_ASN;
-		for (int i = 0; i < route.size(); i++) {
+		//int lastASN = OUR_ASN;
+		for (size_t i = 0; i < route.size(); i++) {
 			int nextIP = route[i];
 			topology::addEdge(topology::ip_graph, lastIP, nextIP);
 			lastIP = nextIP;
@@ -317,7 +314,7 @@ namespace router {
 		return p1.first < p2.first;
 	}
 	
-	void selectBestRoutes(unsigned int targetIP, int num, list<route>& routes) {
+	void selectBestRoutes(unsigned int targetIP, unsigned num, list<route>& routes) {
 		vector<unsigned int> standard_route;
 		trace::traceRoute(targetIP, NULL, 0, send_socket, recv_socket, standard_route);
 		if (validateAndNormalizeRoute(standard_route)) {
@@ -333,10 +330,10 @@ namespace router {
 		int standard_route_length = standard_route.size();
 		unordered_set<pair<unsigned int, unsigned int> > standard_route_edges;
 		unsigned int lastIP = OUR_IP;
-		for (int i = 0; i < standard_route.size(); i++) {
+		for (size_t i = 0; i < standard_route.size(); i++) {
 			unsigned int nextIP = standard_route[i];
-			standard_route_edges.insert(make_pair<unsigned int, unsigned int>(lastIP, nextIP));
-			standard_route_edges.insert(make_pair<unsigned int, unsigned int>(nextIP, lastIP));
+			standard_route_edges.insert(std::make_pair(lastIP, nextIP));
+			standard_route_edges.insert(std::make_pair(nextIP, lastIP));
 			lastIP = nextIP;
 		}
 		
@@ -355,10 +352,12 @@ namespace router {
 				lastIP = nextIP;
 			}
 			
-			quality_of_routes.push_back(make_pair<double, route>((double) common_edges * standard_route_length / (*rit)->size(), *rit));
+			quality_of_routes.push_back(std::make_pair(
+                        static_cast<double>(common_edges) * standard_route_length / (*rit)->size(), 
+                        *rit));
 		}
 		
-		int i = 0;
+		unsigned i = 0;
 		for(list<pair<double, route> >::iterator it = quality_of_routes.begin(); i < num && i < quality_of_routes.size(); i++) {
 			routes.push_front(it->second);
 		}
@@ -384,7 +383,7 @@ namespace router {
 #endif
 			if (!routes->empty()) {
 				selectBestRoutes(*target, 2, *routes);
-				ip2routes.insert(make_pair<unsigned int, list<route>* >(*target, routes));
+				ip2routes.insert(std::make_pair(*target, routes));
 			} else {
 				delete routes;
 			}

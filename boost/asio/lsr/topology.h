@@ -35,8 +35,8 @@ namespace topology {
 
 	void visit(UIntUIntMultimap &graph, void(*visitVertex)(unsigned int), void(*visitEdge)(unsigned int, unsigned int)) {
 		UIntSet ids;
-		bool isFirst = true;
-		unsigned int lastVertex;
+		//bool isFirst = true;
+		//unsigned int lastVertex;
 		for (UIntUIntMultimapIterator iterator = graph.begin(); iterator != graph.end(); ++iterator) {
 			if (ids.find(iterator->first) == ids.end()) {
 				ids.insert(iterator->first);

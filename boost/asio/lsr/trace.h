@@ -105,9 +105,9 @@ namespace trace {
 			buffer_length += 4 * (route_length + 1);
 		}
 		ui8 buffer[buffer_length];
-		buffer[0] = 64 + header_length; buffer[1] = 0x00; buffer[2] = 0x00; buffer[3] = buffer_length;
-		buffer[4] = 0x00; buffer[5] = 0x00; buffer[6] = 0x00; buffer[7] = 0x00;
-		buffer[8] = ttl;  buffer[9] = 0x11; buffer[10] = 0x00; buffer[11] = 0x00;
+		buffer[0] =  64 + header_length; buffer[1] =  0x00; buffer[2]  =  0x00;  buffer[3] =  buffer_length;
+		buffer[4] =  0x00;               buffer[5] =  0x00; buffer[6]  =  0x00;  buffer[7] =  0x00;
+		buffer[8] =  ttl;                buffer[9] =  0x11; buffer[10] =  0x00; buffer[11] =  0x00;
 		((ui32*) buffer)[3] = 0;
 		if (route_length > 0) {
 			((ui32*) buffer)[4] = route[0];
@@ -124,9 +124,9 @@ namespace trace {
 		}
 		
 		((ui16*) (buffer + i))[0] = htons(port); ((ui16*) (buffer + i))[1] = htons(port);
-		((ui16*) (buffer + i))[2] = htons(16); ((ui16*) (buffer + i))[3] = ipChecksum(buffer + i, 16);
-		((ui16*) (buffer + i))[4] = 1; ((ui16*) (buffer + i))[5] = 2;
-		((ui16*) (buffer + i))[6] = 3; ((ui16*) (buffer + i))[7] = 4;
+		((ui16*) (buffer + i))[2] = htons(16);   ((ui16*) (buffer + i))[3] = ipChecksum(buffer + i, 16);
+		((ui16*) (buffer + i))[4] = 1;           ((ui16*) (buffer + i))[5] = 2;
+		((ui16*) (buffer + i))[6] = 3;           ((ui16*) (buffer + i))[7] = 4;
 		debug::hex(buffer, buffer_length);
 		
 		if (sendto(socketDescriptor, buffer, buffer_length, 0, (sockaddr *) &addr, sizeof(addr)) < 0) {

@@ -28,12 +28,12 @@ namespace asn {
 	};
 
 	const int ASN_ENTRIES_MAX_NUM = 200000;
-	char *IP_ASN_FILE_NAME = "ip2asn.tsv";
+	char const*IP_ASN_FILE_NAME = "ip2asn.tsv";
 
 	ui32 ip2infoIndex[1024];
 
-	typedef std::tr1::unordered_map<int, AsnInfo*> IntAsnInfoMap;
-	typedef std::tr1::unordered_map<int, AsnInfo*>::iterator IntAsnInfoMapIterator;
+	typedef std::unordered_map<int, AsnInfo*> IntAsnInfoMap;
+	typedef std::unordered_map<int, AsnInfo*>::iterator IntAsnInfoMapIterator;
 	IntAsnInfoMap asn2info;
 
 	AsnInfo asnInfo[ASN_ENTRIES_MAX_NUM];

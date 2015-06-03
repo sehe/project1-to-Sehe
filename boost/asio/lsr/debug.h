@@ -15,7 +15,7 @@ namespace lsr {
 namespace debug {
 	static void bit(ui8 *ptr, ui32 length) {
 		printf("%p\n", ptr);
-		for (int j = 0; j < length; j++) {
+		for (ui32 j = 0; j < length; j++) {
 			ui8 byte = ptr[j];
 			for (int i = 7; i >= 0; i--) {
 				if((byte>>i) % 2 == 0) {
@@ -58,7 +58,7 @@ namespace debug {
 
 	static void hex(ui8 *ptr, ui32 length) {
 		printf("%p\n", ptr);
-		for (int j = 0; j < length; j++) {
+		for (ui32 j = 0; j < length; j++) {
 			ui8 byte = ptr[j];
 			printHexSymbol(byte >> 4);
 			printHexSymbol(byte % 16);
